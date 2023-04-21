@@ -1,15 +1,5 @@
 import { useQuery } from "react-query";
-
-type Task = {
-  description: string;
-  value: number;
-  checked: boolean;
-};
-
-type Group = {
-  name: string;
-  tasks: Task[];
-};
+import { Group } from "../typings";
 
 // TODO to env
 
