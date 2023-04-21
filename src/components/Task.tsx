@@ -4,14 +4,17 @@ import { Checkbox, FormControlLabel } from "@mui/material";
 
 interface TaskProps {
   groupName: string;
+  index: number;
   task: TaskValues;
   changeValueInGroup: (groupName: string, taskDescription: string, taskValue: boolean) => void;
+  changeCheckedValue: (index: number, value: boolean) => void;
 }
 
-export const Task: FC<TaskProps> = ({ task, groupName, changeValueInGroup }) => {
+export const Task: FC<TaskProps> = ({ task, groupName, changeValueInGroup, changeCheckedValue, index }) => {
   const [checked, setChecked] = useState(task.checked);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     changeValueInGroup(groupName, task.description, e.target.checked);
+    changeCheckedValue(index, e.target.checked);
     setChecked(e.target.checked);
   };
 

@@ -1,6 +1,6 @@
 import { Accordion as MUIAccordion, AccordionDetails, AccordionSummary, Grid, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Group } from "../typings";
 import ListIcon from "@mui/icons-material/List";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
@@ -16,9 +16,17 @@ interface AccordionProps {
 
 export const Accordion: FC<AccordionProps> = ({ group, expanded, handleOpenAccordion, changeValueInGroup }) => {
   const [color, setColor] = useState(lightTheme.palette.common.black);
-  const [allChecked, setAllChecked] = useState(group.tasks.map((task) => task.checked));
+  const [allTasksValues, setAllTasksValues] = useState(group.tasks.map((task) => task.checked));
+  const [allChecked, setAllChecked] = useState(allTasksValues.every((value) => value));
 
-  // TODO write function to check if all checked (deep compare)
+  const changeCheckedValue = (index: number, value: boolean) => {
+    setAllTasksValues((prev) => {
+      prev[index] = value;
+      return prev;
+    });
+
+    setAllChecked(allTasksValues.every((value) => value));
+  };
 
   const isExpanded = expanded === group.name;
 
@@ -47,8 +55,15 @@ export const Accordion: FC<AccordionProps> = ({ group, expanded, handleOpenAccor
         </Grid>
       </AccordionSummary>
       <AccordionDetails sx={{ display: "flex", flexDirection: "column", px: 3 }}>
-        {group.tasks.map((task) => (
-          <Task task={task} key={task.description} groupName={group.name} changeValueInGroup={changeValueInGroup} />
+        {group.tasks.map((task, index) => (
+          <Task
+            task={task}
+            index={index}
+            key={task.description}
+            groupName={group.name}
+            changeValueInGroup={changeValueInGroup}
+            changeCheckedValue={changeCheckedValue}
+          />
         ))}
       </AccordionDetails>
     </MUIAccordion>
