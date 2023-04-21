@@ -1,46 +1,87 @@
-# Getting Started with Create React App
+# Lodgify - FE Technical Challenge
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Hi there!
 
-## Available Scripts
+We would like to give you the opportunity to show us your technical skills. Below you'll find a general outline of the test and the resources needed.
 
-In the project directory, you can run:
+Feel free to create the small project as you wish, as long as **React** is used as the main frontend library.
 
-### `yarn start`
+Preferably, please provide your result as a link to a private github repository where you can  add us as collaborator (@osmellodgify @kluczynskib @lodgifyrecruitment). If for some reasons, this is not possible, you can still send us an archive with the codebase of your project. **Once you complete the test please send an email with the url of the repository or the archive to the recruiter that contacted you.**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Below are the three main rules you must follow, everything else is completely up to you!
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. **Let it run**. We like code that works and shows us amazing **clickable** ui.
+2. **Tell us about it.** Please provide a `[README.md](http://readme.md)` file that explains how to use your amazing code.
+3. **Keep it Simple**. This is just a test. Don't provide us a full platform with thousands of features. You will have time to do that with us when you join the team!
 
-### `yarn test`
+You're probably still asking yourself, "But what exactly do I have to do?". Here's your answer:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<aside>
+📖 Create a widget that shows the current progress of the profile creation of the user. The user should be able to see the missing tasks of a specific area and be able to mark them as done.
 
-### `yarn build`
+</aside>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+In order to do that, we provide the **resources** and the **specifications** below:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Resources
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To complete the assessment, here is the mockup:
 
-### `yarn eject`
+[https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F0HPjyMf6r4ljGKGe4RgqZ3%2FAccordion-Challenge%3Fnode-id%3D0%253A1](https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2F0HPjyMf6r4ljGKGe4RgqZ3%2FAccordion-Challenge%3Fnode-id%3D0%253A1)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This is the expected behaviour with an interactive prototype:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+[Accordion Challenge](https://www.figma.com/proto/0HPjyMf6r4ljGKGe4RgqZ3/Accordion-Challenge?page-id=0%3A1&node-id=80%3A312&viewport=241%2C48%2C0.19&scaling=min-zoom)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+And we also provide the following api with the format below:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+[https://gist.githubusercontent.com/huvber/ba0d534f68e34f1be86d7fe7eff92c96/raw/98a91477905ea518222a6d88dd8b475328a632d3/mock-progress](https://gist.githubusercontent.com/huvber/ba0d534f68e34f1be86d7fe7eff92c96/raw/98a91477905ea518222a6d88dd8b475328a632d3/mock-progress)
 
-## Learn More
+```json
+[
+	{
+		"name": "Group 1", //name of the group in the accordion
+		"tasks": [ //the lists of the checkboxes
+			{
+				"description": "Task 1 - 1",  //the label of the checkbox
+				"value": 23, // the amount of value will increase the progress if checked
+				"checked": false, //if it's checked by default
+			},
+			...
+		]
+	},
+	...
+]
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+(there is no need to add it to your project, you can call it as a normal api)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Specifications
+
+The challenge is to build the widget in the mockup where the value of the progress will be the **normalized** sum of the values of the checked tasks. Each accordion element is one group and every task is a checkbox inside that group.
+
+<aside>
+💡 For **Normalized** in this case we mean to reduce a number to its percentage equivalent of the sum of all the values. In Math:  
+
+$Nt = Vt * 100 / ∑(Vt)$
+
+where:
+$Nt$ is the normalized value of a task
+$Vt$ is the scalar value of the task
+$∑(Vt)$ is the sum of all the tasks values.
+
+for example if the sum of the tasks is 423 and a task has a value of 36 the normalized value will be  8.51
+
+</aside>
+
+**Finally the user should be able to check and/or uncheck one of the tasks and see the progress bar change and if a group have all the checks should be marked as green.**
+
+## Some suggestions
+
+- Try to accomplish all the requirements in the best way possible before trying to add more features or other features. We will evaluate just the part that we asked.
+- Try to be essential and follow [KISS](https://en.wikipedia.org/wiki/KISS_principle). If you decide to use an external library try to still be able to show your knowledge and your strengths.
+- If you think there are too many things to focus on, try to asses the importance of the different parts and come out with a thoughtful MVP. Please explain your reasons, this will be an important insight of your capability to manage work effort
+- We will not evaluate performance although we will appreciate performant solution as a plus.
+- We are not really interested in solving the problem. We are more interested in a code that solves the problem and is readable and maintainable.
+
+That's it. Enjoy 😉

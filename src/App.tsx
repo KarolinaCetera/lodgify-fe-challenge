@@ -1,5 +1,13 @@
+import { QueryClient, QueryClientProvider } from "react-query";
 import "./App.scss";
+import { GroupedTasks } from "./components";
+
+const queryClient = new QueryClient();
 
 export const App = () => {
-  return <h1>Hello</h1>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <GroupedTasks />
+    </QueryClientProvider>
+  );
 };
