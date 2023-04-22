@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Box, CircularProgress, Grid, LinearProgress, Typography } from "@mui/material";
 import { Accordion } from "components";
 import { useGetGroupData } from "../http";
-import { Group } from "typings";
+import { Group, TaskValues } from "typings";
 import { getAllTasksValue } from "../utils";
 
 export const GroupedTasks = () => {
@@ -11,20 +11,31 @@ export const GroupedTasks = () => {
   const [storedGroups, setStoredGroups] = useState<Group[]>([]);
   const [progress, setProgress] = useState(0);
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [allCheckedTasks, setAllCheckedTasks] = useState<TaskValues[]>([]);
 
   useEffect(() => {
     if (groups) setStoredGroups(groups);
-  }, [groups]);
+  }, [groups, storedGroups]);
+
+  useEffect(() => {
+    const checkedTasks = storedGroups
+      .map((group) => group.tasks.filter((task) => task.checked))
+      .flatMap((task) => task);
+    setAllCheckedTasks(checkedTasks);
+  }, [storedGroups]);
 
   const calculateProgress = useCallback(() => {
     const allTasksValue = getAllTasksValue(storedGroups);
-    const allTasks = storedGroups.map((group) => group.tasks.filter((task) => task.checked)).flatMap((task) => task);
+    const updatedCheckedTasks = storedGroups
+      .map((group) => group.tasks.filter((task) => task.checked))
+      .flatMap((task) => task);
+    setAllCheckedTasks(updatedCheckedTasks);
 
-    return allTasks.reduce(
-      (previousValue, currentValue) => (previousValue += +((currentValue.value * 100) / allTasksValue).toFixed(2)),
+    return allCheckedTasks.reduce(
+      (previousValue, currentValue) => (previousValue += +((currentValue.value * 100) / allTasksValue).toFixed(0)),
       0,
     );
-  }, [storedGroups]);
+  }, [allCheckedTasks, storedGroups]);
 
   useEffect(() => {
     const newValue = calculateProgress();
@@ -61,17 +72,6 @@ export const GroupedTasks = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  // const handleChange = (
-  //   e: React.ChangeEvent<HTMLInputElement>,
-  //   groupName: string,
-  //   taskDescription: string,
-  //   taskIndex: number,
-  // ) => {
-  //   changeValueInGroup(groupName, taskDescription, e.target.checked);
-  //   const newProgressValue = calculateProgress();
-  //   setProgress(newProgressValue);
-  // };
-
   if (isLoading) return <CircularProgress />;
   if (isError) return <h1>{error?.message}</h1>;
 
@@ -85,9 +85,13 @@ export const GroupedTasks = () => {
       })}
     >
       <Grid sx={{ m: 2 }}>
-        <Typography variant="h6" fontWeight="bold">
-          Lodgify Grouped Tasks
-        </Typography>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Typography variant="h6" fontWeight="bold">
+            Lodgify Grouped Tasks
+          </Typography>
+          <Typography>{progress}%</Typography>
+        </Grid>
+
         <LinearProgress variant="determinate" value={progress} />
       </Grid>
       <Grid>
