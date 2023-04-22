@@ -9,8 +9,6 @@ interface ProgressBarProps {
 export const ProgressBar: FC<ProgressBarProps> = ({ progress }) => (
   <LinearProgress
     sx={{
-      mt: 2,
-      mb: 4,
       height: 25,
       width: "100%",
       borderRadius: 10,
@@ -32,7 +30,6 @@ export const ProgressBar: FC<ProgressBarProps> = ({ progress }) => (
           position: "absolute",
           zIndex: 2,
           mr: 2,
-          fontWeight: "bold",
         },
       },
     }}

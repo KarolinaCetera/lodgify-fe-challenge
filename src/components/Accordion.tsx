@@ -1,7 +1,8 @@
 import { FC, useMemo, useState } from "react";
-import { Accordion as MUIAccordion, AccordionDetails, AccordionSummary, Grid, Typography } from "@mui/material";
-import { ExpandMore, List, FactCheck } from "@mui/icons-material";
-
+import { Accordion as MUIAccordion, AccordionDetails, AccordionSummary, Grid, Icon, Typography } from "@mui/material";
+import { ExpandMore } from "@mui/icons-material";
+import Completed from "../assets/completed.svg";
+import Uncompleted from "../assets/uncompleted.svg";
 import { Task } from "components";
 import { Group, TaskValues } from "typings";
 import { lightTheme } from "styles";
@@ -19,10 +20,7 @@ export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccor
 
   const isExpanded = expanded === group.name;
 
-  const color = useMemo(
-    () => (isAllChecked ? lightTheme.palette.primary.main : lightTheme.palette.common.black),
-    [isAllChecked],
-  );
+  const color = useMemo(() => (isAllChecked ? lightTheme.palette.primary.main : "#333"), [isAllChecked]);
 
   const onCheckboxChange = (
     groupName: string,
@@ -43,13 +41,17 @@ export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccor
       disableGutters
       expanded={isExpanded}
       onChange={handleOpenAccordion(group.name)}
-      sx={(theme) => ({ border: `1px solid ${theme.palette.grey[300]}` })}
+      sx={{ border: "1px solid #ddd" }}
     >
       <AccordionSummary expandIcon={<ExpandMore />} aria-controls={`${group.name}-content`}>
         <Grid container>
-          <Grid container item xs={10}>
-            {isAllChecked ? <FactCheck sx={{ color }} /> : <List sx={{ color }} />}
-            <Typography sx={{ ml: 2, color }}>{group.name}</Typography>
+          <Grid container item xs={10} alignItems="center">
+            <Icon sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img src={isAllChecked ? Completed : Uncompleted} alt="accordionIcon" />
+            </Icon>
+            <Typography fontSize={18} sx={{ ml: 2, color }}>
+              {group.name}
+            </Typography>
           </Grid>
           <Grid container justifyContent="flex-end" item xs={2} pr={1}>
             <Typography sx={{ color: lightTheme.palette.grey[400] }}>{isExpanded ? "Hide" : "Show"}</Typography>

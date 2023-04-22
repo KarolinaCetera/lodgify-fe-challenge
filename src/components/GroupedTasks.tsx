@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import { Accordion, ProgressBar } from "components";
+import { Box, CircularProgress, Grid } from "@mui/material";
+import { Accordion, Header } from "components";
 import { useGetGroupData } from "../http";
 import { Group, TaskValues } from "typings";
 import { calculateValue, getAllTasksValue, getCheckedTasks } from "utils";
@@ -79,20 +79,13 @@ export const GroupedTasks = () => {
   return (
     <Box
       sx={(theme) => ({
-        width: "60%",
+        width: 820,
         borderRadius: 2,
-        border: "1px solid #ddd",
+        border: "1px solid #ccc",
         padding: theme.spacing(2),
       })}
     >
-      <Grid sx={{ m: 2 }}>
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" fontWeight="bolder">
-            Lodgify Grouped Tasks
-          </Typography>
-        </Grid>
-        <ProgressBar progress={progress} />
-      </Grid>
+      <Header progress={progress} />
       <Grid>
         {storedGroups?.map((group) => (
           <Accordion
