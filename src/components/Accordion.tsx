@@ -1,39 +1,37 @@
 import { FC, useMemo, useState } from "react";
 import { Accordion as MUIAccordion, AccordionDetails, AccordionSummary, Grid, Icon, Typography } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
+import { Task } from "components";
+import { ChangeCheckboxParams, Group } from "typings";
+import { lightTheme } from "styles";
 import Completed from "../assets/completed.svg";
 import Uncompleted from "../assets/uncompleted.svg";
-import { Task } from "components";
-import { Group, TaskValues } from "typings";
-import { lightTheme } from "styles";
+import Expand from "../assets/expand.svg";
 
 interface AccordionProps {
   expanded: string | false;
   group: Group;
   handleOpenAccordion(panel: string): (event: React.SyntheticEvent, isExpanded: boolean) => void;
-  handleChangeCheckbox: (groupName: string, taskDescription: string, e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChangeCheckbox: (params: ChangeCheckboxParams) => void;
 }
 
 export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccordion, handleChangeCheckbox }) => {
-  const [allGroupTasks, setAllGroupTasks] = useState(group.tasks.map((task) => task.checked));
-  const [isAllChecked, setIsAllChecked] = useState(allGroupTasks.every((value) => value));
+  const [allCheckedTasks, setAllCheckedTasks] = useState(group.tasks.map((task) => task.checked));
+  const [isAllChecked, setIsAllChecked] = useState(allCheckedTasks.every((value) => value));
 
-  const isExpanded = expanded === group.name;
+  const isExpanded = useMemo(() => expanded === group.name, [expanded, group.name]);
 
-  const color = useMemo(() => (isAllChecked ? lightTheme.palette.primary.main : "#333"), [isAllChecked]);
+  const accordionElementsColor = useMemo(
+    () => (isAllChecked ? lightTheme.palette.primary.main : lightTheme.palette.grey[900]),
+    [isAllChecked],
+  );
 
-  const onCheckboxChange = (
-    groupName: string,
-    index: number,
-    task: TaskValues,
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setAllGroupTasks((prev) => {
+  const onCheckboxChange = (index: number, { groupName, task, e }: ChangeCheckboxParams) => {
+    setAllCheckedTasks((prev) => {
       prev[index] = e.target.checked;
       return prev;
     });
-    setIsAllChecked(allGroupTasks.every((task) => task));
-    handleChangeCheckbox(groupName, task.description, e);
+    setIsAllChecked(allCheckedTasks.every((task) => task));
+    handleChangeCheckbox({ groupName, task, e });
   };
 
   return (
@@ -41,20 +39,34 @@ export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccor
       disableGutters
       expanded={isExpanded}
       onChange={handleOpenAccordion(group.name)}
-      sx={{ border: "1px solid #ddd" }}
+      elevation={0}
+      sx={(theme) => ({
+        border: `1px solid ${theme.palette.grey[300]}`,
+        borderTop: 0,
+        "&:first-of-type": {
+          borderRadius: "8px 8px 0 0",
+          borderTop: `1px solid ${theme.palette.grey[300]}`,
+        },
+        "&:last-of-type": {
+          borderRadius: "0 0 8px 8px",
+        },
+      })}
     >
-      <AccordionSummary expandIcon={<ExpandMore />} aria-controls={`${group.name}-content`}>
+      <AccordionSummary
+        expandIcon={<img src={Expand} alt="accordionExpandIcon" />}
+        aria-controls={`${group.name}-content`}
+      >
         <Grid container>
           <Grid container item xs={10} alignItems="center">
             <Icon sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <img src={isAllChecked ? Completed : Uncompleted} alt="accordionIcon" />
+              <img src={isAllChecked ? Completed : Uncompleted} alt="accordionElementIcon" />
             </Icon>
-            <Typography fontSize={18} sx={{ ml: 2, color }}>
+            <Typography fontSize={18} sx={{ ml: 2, color: accordionElementsColor }}>
               {group.name}
             </Typography>
           </Grid>
-          <Grid container justifyContent="flex-end" item xs={2} pr={1}>
-            <Typography sx={{ color: lightTheme.palette.grey[400] }}>{isExpanded ? "Hide" : "Show"}</Typography>
+          <Grid container justifyContent="flex-end" alignItems="center" item xs={2} pr={1}>
+            <Typography sx={(theme) => ({ color: theme.palette.grey[500] })}>{isExpanded ? "Hide" : "Show"}</Typography>
           </Grid>
         </Grid>
       </AccordionSummary>

@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Box, CircularProgress, Grid } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { Accordion, Header } from "components";
 import { useGetGroupData } from "../http";
-import { Group, TaskValues } from "typings";
+import { ChangeCheckboxParams, Group, TaskValues } from "typings";
 import { calculateValue, getAllTasksValue, getCheckedTasks } from "utils";
-import { useSnackbar } from "notistack";
 
 export const GroupedTasks = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -62,8 +62,8 @@ export const GroupedTasks = () => {
     });
   };
 
-  const handleChangeCheckbox = (groupName: string, taskDescription: string, e: React.ChangeEvent<HTMLInputElement>) => {
-    changeValueInGroup(groupName, taskDescription, e.target.checked);
+  const handleChangeCheckbox = ({ groupName, task, e }: ChangeCheckboxParams) => {
+    changeValueInGroup(groupName, task.description, e.target.checked);
     setProgress(calculateProgress());
   };
 
@@ -81,8 +81,8 @@ export const GroupedTasks = () => {
       sx={(theme) => ({
         width: 820,
         borderRadius: 2,
-        border: "1px solid #ccc",
-        padding: theme.spacing(2),
+        border: `1px solid ${theme.palette.grey[200]}`,
+        p: 2,
       })}
     >
       <Header progress={progress} />

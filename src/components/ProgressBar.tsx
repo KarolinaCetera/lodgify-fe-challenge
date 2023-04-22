@@ -25,6 +25,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({ progress }) => (
         borderRadius: 10,
         "&::before": {
           content: `'${progress}%'`,
+          fontFamily: "Source Sans Pro",
           display: "block",
           color: lightTheme.palette.common.white,
           position: "absolute",
