@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid, LinearProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, LinearProgress, linearProgressClasses, Typography } from "@mui/material";
 import { Accordion } from "components";
 import { useGetGroupData } from "../http";
 import { Group, TaskValues } from "typings";
 import { getAllTasksValue } from "../utils";
+import { lightTheme } from "../styles";
+import ProgressBar from "./ProgressBar";
 
 export const GroupedTasks = () => {
   const { data: groups, isError, isLoading, error } = useGetGroupData();
@@ -86,13 +88,11 @@ export const GroupedTasks = () => {
     >
       <Grid sx={{ m: 2 }}>
         <Grid container alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" fontWeight="bold">
+          <Typography variant="h6" fontWeight="bolder">
             Lodgify Grouped Tasks
           </Typography>
-          <Typography>{progress}%</Typography>
         </Grid>
-
-        <LinearProgress variant="determinate" value={progress} />
+        <ProgressBar progress={progress} />
       </Grid>
       <Grid>
         {storedGroups?.map((group) => {

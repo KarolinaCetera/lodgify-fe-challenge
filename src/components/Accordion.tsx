@@ -46,7 +46,12 @@ export const Accordion: FC<AccordionProps> = ({
   );
 
   return (
-    <MUIAccordion disableGutters expanded={isExpanded} onChange={handleOpenAccordion(group.name)}>
+    <MUIAccordion
+      disableGutters
+      expanded={isExpanded}
+      onChange={handleOpenAccordion(group.name)}
+      sx={(theme) => ({ border: `1px solid ${theme.palette.grey[300]}` })}
+    >
       <AccordionSummary expandIcon={<ExpandMore />} aria-controls={`${group.name}-content`}>
         <Grid container>
           <Grid container item xs={10}>

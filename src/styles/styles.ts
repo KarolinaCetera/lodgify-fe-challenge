@@ -9,6 +9,7 @@ export const lightTheme = createTheme({
     // mode: "light",
     primary: {
       main: "#01b797",
+      light: "#f2fbfa",
     },
   },
   typography: {
