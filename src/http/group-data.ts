@@ -2,13 +2,10 @@ import { useQuery, UseQueryResult } from "react-query";
 import { Group } from "typings";
 import { calculateValue, getAllTasksValue, getCheckedTasks } from "utils";
 
-// TODO to env
-
-const groupDataAPIUrl =
-  "https://gist.githubusercontent.com/huvber/ba0d534f68e34f1be86d7fe7eff92c96/raw/98a91477905ea518222a6d88dd8b475328a632d3/mock-progress";
+const groupDataAPIUrl = process.env.REACT_APP_GROUP_DATA_API;
 
 export const getGroupData = async (): Promise<Group[]> => {
-  const response = await fetch(groupDataAPIUrl, {
+  const response = await fetch(groupDataAPIUrl || "", {
     method: "GET",
   });
 
