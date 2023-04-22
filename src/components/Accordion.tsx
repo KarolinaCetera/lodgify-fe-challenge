@@ -11,9 +11,18 @@ interface AccordionProps {
   group: Group;
   handleOpenAccordion(panel: string): (event: React.SyntheticEvent, isExpanded: boolean) => void;
   changeValueInGroup: (groupName: string, taskDescription: string, taskValue: boolean) => void;
+  calculateProgress: () => number;
+  setProgress: (value: number) => void;
 }
 
-export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccordion, changeValueInGroup }) => {
+export const Accordion: FC<AccordionProps> = ({
+  expanded,
+  group,
+  handleOpenAccordion,
+  changeValueInGroup,
+  calculateProgress,
+  setProgress,
+}) => {
   const [allTasksValues, setAllTasksValues] = useState(group.tasks.map((task) => task.checked));
   const [allChecked, setAllChecked] = useState(allTasksValues.every((value) => value));
 
@@ -65,6 +74,8 @@ export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccor
             groupName={group.name}
             changeValueInGroup={changeValueInGroup}
             changeCheckedValue={changeCheckedValue}
+            calculateProgress={calculateProgress}
+            setProgress={setProgress}
           />
         ))}
       </AccordionDetails>

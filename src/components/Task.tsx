@@ -8,13 +8,25 @@ interface TaskProps {
   task: TaskValues;
   changeValueInGroup: (groupName: string, taskDescription: string, taskValue: boolean) => void;
   changeCheckedValue: (index: number, value: boolean) => void;
+  calculateProgress: () => number;
+  setProgress: (value: number) => void;
 }
 
-export const Task: FC<TaskProps> = ({ groupName, index, task, changeValueInGroup, changeCheckedValue }) => {
+export const Task: FC<TaskProps> = ({
+  groupName,
+  index,
+  task,
+  changeValueInGroup,
+  changeCheckedValue,
+  calculateProgress,
+  setProgress,
+}) => {
   const [checked, setChecked] = useState(task.checked);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    changeCheckedValue(index, task.checked);
     changeValueInGroup(groupName, task.description, e.target.checked);
-    changeCheckedValue(index, e.target.checked);
+    const newProgressValue = calculateProgress();
+    setProgress(newProgressValue);
     setChecked(e.target.checked);
   };
 
