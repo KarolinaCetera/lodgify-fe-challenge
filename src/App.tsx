@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from "react-query";
-import "./App.scss";
-import { GroupedTasks } from "components";
 import { ThemeProvider } from "@mui/material";
-import { lightTheme } from "./styles";
+import { SnackbarProvider } from "notistack";
+import { GroupedTasks } from "components";
+import { lightTheme } from "styles";
+import "./App.scss";
 
 const queryClient = new QueryClient();
 
@@ -10,7 +11,9 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={lightTheme}>
-        <GroupedTasks />
+        <SnackbarProvider maxSnack={2}>
+          <GroupedTasks />
+        </SnackbarProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

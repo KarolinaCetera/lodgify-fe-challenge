@@ -4,22 +4,24 @@ import { Accordion, ProgressBar } from "components";
 import { useGetGroupData } from "../http";
 import { Group, TaskValues } from "typings";
 import { calculateValue, getAllTasksValue, getCheckedTasks } from "utils";
+import { useSnackbar } from "notistack";
 
 export const GroupedTasks = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [{ data: groups, isError, isLoading, error }, allCheckedTasksValue] = useGetGroupData();
 
-  const [storedGroups, setStoredGroups] = useState<Group[]>([]);
-  const [progress, setProgress] = useState(0);
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [storedGroups, setStoredGroups] = useState<Group[]>([]);
   const [allCheckedTasks, setAllCheckedTasks] = useState<TaskValues[]>([]);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (groups) setStoredGroups(groups);
-  }, [groups, storedGroups]);
+  }, [groups]);
 
   useEffect(() => {
-    const checkedTasks = getCheckedTasks(storedGroups);
-    setAllCheckedTasks(checkedTasks);
+    setAllCheckedTasks(getCheckedTasks(storedGroups));
   }, [storedGroups]);
 
   useEffect(() => {
@@ -70,7 +72,9 @@ export const GroupedTasks = () => {
   };
 
   if (isLoading) return <CircularProgress />;
-  if (isError) return <h1>{error?.message}</h1>;
+  if (isError) {
+    enqueueSnackbar(error?.message, { variant: "error" });
+  }
 
   return (
     <Box
