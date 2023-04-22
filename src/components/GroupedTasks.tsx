@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid, LinearProgress, linearProgressClasses, Typography } from "@mui/material";
-import { Accordion } from "components";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { Accordion, ProgressBar } from "components";
 import { useGetGroupData } from "../http";
 import { Group, TaskValues } from "typings";
-import { getAllTasksValue } from "../utils";
-import { lightTheme } from "../styles";
-import ProgressBar from "./ProgressBar";
+import { calculateValue, getAllTasksValue, getCheckedTasks } from "utils";
 
 export const GroupedTasks = () => {
-  const { data: groups, isError, isLoading, error } = useGetGroupData();
+  const [{ data: groups, isError, isLoading, error }, allCheckedTasksValue] = useGetGroupData();
 
   const [storedGroups, setStoredGroups] = useState<Group[]>([]);
   const [progress, setProgress] = useState(0);
@@ -20,29 +18,21 @@ export const GroupedTasks = () => {
   }, [groups, storedGroups]);
 
   useEffect(() => {
-    const checkedTasks = storedGroups
-      .map((group) => group.tasks.filter((task) => task.checked))
-      .flatMap((task) => task);
+    const checkedTasks = getCheckedTasks(storedGroups);
     setAllCheckedTasks(checkedTasks);
   }, [storedGroups]);
 
+  useEffect(() => {
+    setProgress(allCheckedTasksValue);
+  }, [allCheckedTasksValue]);
+
   const calculateProgress = useCallback(() => {
     const allTasksValue = getAllTasksValue(storedGroups);
-    const updatedCheckedTasks = storedGroups
-      .map((group) => group.tasks.filter((task) => task.checked))
-      .flatMap((task) => task);
+    const updatedCheckedTasks = getCheckedTasks(storedGroups);
     setAllCheckedTasks(updatedCheckedTasks);
 
-    return allCheckedTasks.reduce(
-      (previousValue, currentValue) => (previousValue += +((currentValue.value * 100) / allTasksValue).toFixed(0)),
-      0,
-    );
+    return calculateValue(allTasksValue, allCheckedTasks);
   }, [allCheckedTasks, storedGroups]);
-
-  useEffect(() => {
-    const newValue = calculateProgress();
-    setProgress(newValue);
-  }, [calculateProgress]);
 
   const changeValueInGroup = (groupName: string, taskDescription: string, taskValue: boolean) => {
     setStoredGroups((prevGroup) => {
@@ -68,6 +58,11 @@ export const GroupedTasks = () => {
 
       return prevGroup;
     });
+  };
+
+  const handleChangeCheckbox = (groupName: string, taskDescription: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    changeValueInGroup(groupName, taskDescription, e.target.checked);
+    setProgress(calculateProgress());
   };
 
   const handleOpenAccordion = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -102,9 +97,7 @@ export const GroupedTasks = () => {
               group={group}
               expanded={expanded}
               handleOpenAccordion={handleOpenAccordion}
-              changeValueInGroup={changeValueInGroup}
-              calculateProgress={calculateProgress}
-              setProgress={setProgress}
+              handleChangeCheckbox={handleChangeCheckbox} // check
             />
           );
         })}

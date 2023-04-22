@@ -1,5 +1,6 @@
-import { useQuery } from "react-query";
-import { Group } from "../typings";
+import { useQuery, UseQueryResult } from "react-query";
+import { Group } from "typings";
+import { calculateValue, getAllTasksValue, getCheckedTasks } from "utils";
 
 // TODO to env
 
@@ -14,4 +15,12 @@ export const getGroupData = async (): Promise<Group[]> => {
   return response.json();
 };
 
-export const useGetGroupData = () => useQuery<Group[], Error>(["group-data"], () => getGroupData());
+export const useGetGroupData = (): [UseQueryResult<Group[], Error>, number] => {
+  const response = useQuery<Group[], Error>(["group-data"], () => getGroupData());
+  const allTasksValue = getAllTasksValue(response.data || []);
+
+  const initiallyCheckedTasks = getCheckedTasks(response.data || []);
+
+  const allCheckedTasksValue: number | undefined = calculateValue(allTasksValue, initiallyCheckedTasks || []);
+  return [response, allCheckedTasksValue || 0];
+};

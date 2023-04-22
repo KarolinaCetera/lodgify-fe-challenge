@@ -3,26 +3,17 @@ import { Accordion as MUIAccordion, AccordionDetails, AccordionSummary, Grid, Ty
 import { ExpandMore, List, FactCheck } from "@mui/icons-material";
 
 import { Task } from "components";
-import { Group } from "typings";
+import { Group, TaskValues } from "typings";
 import { lightTheme } from "styles";
 
 interface AccordionProps {
   expanded: string | false;
   group: Group;
   handleOpenAccordion(panel: string): (event: React.SyntheticEvent, isExpanded: boolean) => void;
-  changeValueInGroup: (groupName: string, taskDescription: string, taskValue: boolean) => void;
-  calculateProgress: () => number;
-  setProgress: (value: number) => void;
+  handleChangeCheckbox: (groupName: string, taskDescription: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const Accordion: FC<AccordionProps> = ({
-  expanded,
-  group,
-  handleOpenAccordion,
-  changeValueInGroup,
-  calculateProgress,
-  setProgress,
-}) => {
+export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccordion, handleChangeCheckbox }) => {
   const [allTasksValues, setAllTasksValues] = useState(group.tasks.map((task) => task.checked));
   const [allChecked, setAllChecked] = useState(allTasksValues.every((value) => value));
 
@@ -44,6 +35,16 @@ export const Accordion: FC<AccordionProps> = ({
     },
     [group.tasks],
   );
+
+  const onCheckboxChange = (
+    groupName: string,
+    index: number,
+    task: TaskValues,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    changeCheckedValue(index, task.checked); // acc
+    handleChangeCheckbox(groupName, task.description, e);
+  };
 
   return (
     <MUIAccordion
@@ -77,10 +78,7 @@ export const Accordion: FC<AccordionProps> = ({
             index={index}
             key={task.description}
             groupName={group.name}
-            changeValueInGroup={changeValueInGroup}
-            changeCheckedValue={changeCheckedValue}
-            calculateProgress={calculateProgress}
-            setProgress={setProgress}
+            onCheckboxChange={onCheckboxChange}
           />
         ))}
       </AccordionDetails>
