@@ -23,7 +23,7 @@ export const Task: FC<TaskProps> = ({ groupName, index, task, onCheckboxChange }
 
   return (
     <FormControlLabel
-      sx={{ my: 2 }}
+      sx={{ my: 1 }}
       control={<Checkbox checked={checked} onChange={handleChange} inputProps={{ "aria-label": "controlled" }} />}
       label={task.description}
     />

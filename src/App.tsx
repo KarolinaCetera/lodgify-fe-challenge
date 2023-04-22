@@ -5,7 +5,13 @@ import { GroupedTasks } from "components";
 import { lightTheme } from "styles";
 import "./App.scss";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export const App = () => {
   return (
