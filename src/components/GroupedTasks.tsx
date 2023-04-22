@@ -90,17 +90,15 @@ export const GroupedTasks = () => {
         <ProgressBar progress={progress} />
       </Grid>
       <Grid>
-        {storedGroups?.map((group) => {
-          return (
-            <Accordion
-              key={group.name}
-              group={group}
-              expanded={expanded}
-              handleOpenAccordion={handleOpenAccordion}
-              handleChangeCheckbox={handleChangeCheckbox} // check
-            />
-          );
-        })}
+        {storedGroups?.map((group) => (
+          <Accordion
+            key={group.name}
+            group={group}
+            expanded={expanded}
+            handleOpenAccordion={handleOpenAccordion}
+            handleChangeCheckbox={handleChangeCheckbox} // check
+          />
+        ))}
       </Grid>
     </Box>
   );

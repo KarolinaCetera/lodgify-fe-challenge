@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Accordion as MUIAccordion, AccordionDetails, AccordionSummary, Grid, Typography } from "@mui/material";
 import { ExpandMore, List, FactCheck } from "@mui/icons-material";
 
@@ -14,26 +14,14 @@ interface AccordionProps {
 }
 
 export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccordion, handleChangeCheckbox }) => {
-  const [allTasksValues, setAllTasksValues] = useState(group.tasks.map((task) => task.checked));
-  const [allChecked, setAllChecked] = useState(allTasksValues.every((value) => value));
+  const [allGroupTasks, setAllGroupTasks] = useState(group.tasks.map((task) => task.checked));
+  const [isAllChecked, setIsAllChecked] = useState(allGroupTasks.every((value) => value));
 
   const isExpanded = expanded === group.name;
 
   const color = useMemo(
-    () => (allChecked ? lightTheme.palette.primary.main : lightTheme.palette.common.black),
-    [allChecked],
-  );
-
-  const changeCheckedValue = useCallback(
-    (index: number, value: boolean) => {
-      setAllTasksValues((prev) => {
-        prev[index] = value;
-        return prev;
-      });
-
-      setAllChecked(group.tasks.every((task) => task.checked));
-    },
-    [group.tasks],
+    () => (isAllChecked ? lightTheme.palette.primary.main : lightTheme.palette.common.black),
+    [isAllChecked],
   );
 
   const onCheckboxChange = (
@@ -42,7 +30,11 @@ export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccor
     task: TaskValues,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    changeCheckedValue(index, task.checked); // acc
+    setAllGroupTasks((prev) => {
+      prev[index] = e.target.checked;
+      return prev;
+    });
+    setIsAllChecked(allGroupTasks.every((task) => task));
     handleChangeCheckbox(groupName, task.description, e);
   };
 
@@ -56,27 +48,20 @@ export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccor
       <AccordionSummary expandIcon={<ExpandMore />} aria-controls={`${group.name}-content`}>
         <Grid container>
           <Grid container item xs={10}>
-            {allChecked ? <FactCheck sx={{ color }} /> : <List sx={{ color }} />}
-            <Typography
-              sx={{
-                ml: 2,
-                color,
-              }}
-            >
-              {group.name}
-            </Typography>
+            {isAllChecked ? <FactCheck sx={{ color }} /> : <List sx={{ color }} />}
+            <Typography sx={{ ml: 2, color }}>{group.name}</Typography>
           </Grid>
           <Grid container justifyContent="flex-end" item xs={2} pr={1}>
-            <Typography sx={{ color: "#bbb" }}>{isExpanded ? "Hide" : "Show"}</Typography>
+            <Typography sx={{ color: lightTheme.palette.grey[400] }}>{isExpanded ? "Hide" : "Show"}</Typography>
           </Grid>
         </Grid>
       </AccordionSummary>
       <AccordionDetails sx={{ display: "flex", flexDirection: "column", px: 3 }}>
         {group.tasks.map((task, index) => (
           <Task
+            key={task.description}
             task={task}
             index={index}
-            key={task.description}
             groupName={group.name}
             onCheckboxChange={onCheckboxChange}
           />

@@ -18,7 +18,7 @@ export const Task: FC<TaskProps> = ({ groupName, index, task, onCheckboxChange }
   const [checked, setChecked] = useState(task.checked);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onCheckboxChange(groupName, index, task, e);
-    setChecked(e.target.checked); // own
+    setChecked(e.target.checked);
   };
 
   return (
