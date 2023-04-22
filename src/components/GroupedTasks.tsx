@@ -1,16 +1,18 @@
-import { useGetGroupData } from "../http/group-data";
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { Accordion } from "components";
-import { getAllTasksValue } from "../utils";
-import { Group } from "../typings";
+import { useGetGroupData } from "../http";
+import { Group } from "typings";
 
 export const GroupedTasks = () => {
-  const [expanded, setExpanded] = useState<string | false>(false);
-
   const { data: groups, isError, isLoading, error } = useGetGroupData();
 
   const [storedGroups, setStoredGroups] = useState<Group[]>([]);
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  useEffect(() => {
+    if (groups) setStoredGroups(groups);
+  }, [groups]);
 
   const changeValueInGroup = (groupName: string, taskDescription: string, taskValue: boolean) => {
     setStoredGroups((prevGroup) => {
@@ -38,15 +40,11 @@ export const GroupedTasks = () => {
     });
   };
 
-  useEffect(() => {
-    if (groups) setStoredGroups(groups);
-  }, [groups]);
-
   const handleOpenAccordion = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const allTasksValue = getAllTasksValue(groups || []);
+  // const allTasksValue = getAllTasksValue(groups || []);
 
   if (isLoading) return <CircularProgress />;
   if (isError) return <h1>{error?.message}</h1>;

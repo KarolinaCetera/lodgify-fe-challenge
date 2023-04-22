@@ -1,6 +1,6 @@
-import { TaskValues } from "../typings";
 import { FC, useState } from "react";
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { TaskValues } from "typings";
 
 interface TaskProps {
   groupName: string;
@@ -10,7 +10,7 @@ interface TaskProps {
   changeCheckedValue: (index: number, value: boolean) => void;
 }
 
-export const Task: FC<TaskProps> = ({ task, groupName, changeValueInGroup, changeCheckedValue, index }) => {
+export const Task: FC<TaskProps> = ({ groupName, index, task, changeValueInGroup, changeCheckedValue }) => {
   const [checked, setChecked] = useState(task.checked);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     changeValueInGroup(groupName, task.description, e.target.checked);

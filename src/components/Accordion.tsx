@@ -1,45 +1,47 @@
+import { FC, useCallback, useMemo, useState } from "react";
 import { Accordion as MUIAccordion, AccordionDetails, AccordionSummary, Grid, Typography } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { FC, useEffect, useMemo, useState } from "react";
-import { Group } from "../typings";
-import ListIcon from "@mui/icons-material/List";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import { Task } from "./Task";
-import { lightTheme } from "../styles";
+import { ExpandMore, List, FactCheck } from "@mui/icons-material";
+
+import { Task } from "components";
+import { Group } from "typings";
+import { lightTheme } from "styles";
 
 interface AccordionProps {
-  group: Group;
   expanded: string | false;
+  group: Group;
   handleOpenAccordion(panel: string): (event: React.SyntheticEvent, isExpanded: boolean) => void;
   changeValueInGroup: (groupName: string, taskDescription: string, taskValue: boolean) => void;
 }
 
-export const Accordion: FC<AccordionProps> = ({ group, expanded, handleOpenAccordion, changeValueInGroup }) => {
-  const [color, setColor] = useState(lightTheme.palette.common.black);
+export const Accordion: FC<AccordionProps> = ({ expanded, group, handleOpenAccordion, changeValueInGroup }) => {
   const [allTasksValues, setAllTasksValues] = useState(group.tasks.map((task) => task.checked));
   const [allChecked, setAllChecked] = useState(allTasksValues.every((value) => value));
 
-  const changeCheckedValue = (index: number, value: boolean) => {
-    setAllTasksValues((prev) => {
-      prev[index] = value;
-      return prev;
-    });
-
-    setAllChecked(allTasksValues.every((value) => value));
-  };
-
   const isExpanded = expanded === group.name;
 
-  useEffect(() => {
-    setColor(() => (allChecked ? lightTheme.palette.primary.main : lightTheme.palette.common.black));
-  }, [allChecked]);
+  const color = useMemo(
+    () => (allChecked ? lightTheme.palette.primary.main : lightTheme.palette.common.black),
+    [allChecked],
+  );
+
+  const changeCheckedValue = useCallback(
+    (index: number, value: boolean) => {
+      setAllTasksValues((prev) => {
+        prev[index] = value;
+        return prev;
+      });
+
+      setAllChecked(group.tasks.every((task) => task.checked));
+    },
+    [group.tasks],
+  );
 
   return (
     <MUIAccordion disableGutters expanded={isExpanded} onChange={handleOpenAccordion(group.name)}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`${group.name}-content`}>
+      <AccordionSummary expandIcon={<ExpandMore />} aria-controls={`${group.name}-content`}>
         <Grid container>
           <Grid container item xs={10}>
-            {allChecked ? <FactCheckIcon sx={{ color }} /> : <ListIcon sx={{ color }} />}
+            {allChecked ? <FactCheck sx={{ color }} /> : <List sx={{ color }} />}
             <Typography
               sx={{
                 ml: 2,
