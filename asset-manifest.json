@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/lodgify-fe-challenge/static/css/main.6834822f.css",
+    "main.js": "/lodgify-fe-challenge/static/js/main.66dcd545.js",
+    "static/media/completed.svg": "/lodgify-fe-challenge/static/media/completed.c02ca2a0c9e5264c528acb81615f989d.svg",
+    "static/media/uncompleted.svg": "/lodgify-fe-challenge/static/media/uncompleted.51940d8fb065fbdf0876c081df506598.svg",
+    "index.html": "/lodgify-fe-challenge/index.html",
+    "static/media/expand.svg": "/lodgify-fe-challenge/static/media/expand.c0f16e68aede81d7063f4ad5b2946e24.svg",
+    "main.6834822f.css.map": "/lodgify-fe-challenge/static/css/main.6834822f.css.map",
+    "main.66dcd545.js.map": "/lodgify-fe-challenge/static/js/main.66dcd545.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6834822f.css",
+    "static/js/main.66dcd545.js"
+  ]
+}
